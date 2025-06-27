@@ -15,9 +15,7 @@ pipeline {
 
     stage('Setup Python Environment') {
       steps {
-        sh '''
-          pip install --upgrade ppdeep pymongo
-        '''
+        sh 'pip install --upgrade ppdeep pymongo'
       }
     }
 
