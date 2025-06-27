@@ -24,7 +24,7 @@ pipeline {
 
     stage('Setup Python Environment') {
       steps {
-        sh 'source ~/venvs/datasci/bin/activate'
+        sh 'source /Users/jayesh.chaudhari@cohesity.com/venvs/datasci/bin/activate'
       }
     }
 
