@@ -36,6 +36,7 @@ pipeline {
           pip install --upgrade ppdeep pymongo
         '''
       }
+    }
 
     // stage('1) Retrieve Hashes') {
     //   steps {
