@@ -41,7 +41,7 @@ pipeline {
         withCredentials([string(credentialsId: 'vt-api-key', variable: 'VT_API_KEY')]) {
           sh '''
             # initialize the vt CLI by absolute path
-            /opt/homebrew/bin/vt init "$VT_API_KEY"
+            /opt/homebrew/bin/vt init --apikey "$VT_API_KEY" --force
             
             # now your Python script can call vt search by absolute path too
             chmod +x scripts/retrieve_hashes.py
