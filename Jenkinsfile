@@ -1,9 +1,18 @@
 pipeline {
   agent any
 
+  // environment {
+  //   PYTHONUNBUFFERED = '1'
+  //   MONGO_URI        = 'mongodb://127.0.0.1:27017'
+  // }
+
   environment {
     PYTHONUNBUFFERED = '1'
     MONGO_URI        = 'mongodb://127.0.0.1:27017'
+
+    // Inject your key directly—vt will read this automatically
+    VT_API_KEY       = credentials('vt-api-key')
+    PATH             = "/opt/homebrew/bin:/usr/local/bin:${env.PATH}"
   }
 
   stages {
@@ -36,19 +45,32 @@ pipeline {
     //   }
     // }
 
+    // stage('1) Retrieve Hashes') {
+    //   steps {
+    //     withCredentials([string(credentialsId: 'vt-api-key', variable: 'VT_API_KEY')]) {
+    //       sh '''
+    //         # initialize the vt CLI by absolute path
+    //         /opt/homebrew/bin/vt init --apikey "$VT_API_KEY" --force
+            
+    //         # now your Python script can call vt search by absolute path too
+    //         chmod +x scripts/retrieve_hashes.py
+    //         python3 scripts/retrieve_hashes.py
+    //       '''
+    //     }
+    //     archiveArtifacts artifacts: 'hashes.json'
+    //   }
+    // }
+
     stage('1) Retrieve Hashes') {
       steps {
-        withCredentials([string(credentialsId: 'vt-api-key', variable: 'VT_API_KEY')]) {
-          sh '''
-            # initialize the vt CLI by absolute path
-            /opt/homebrew/bin/vt init --apikey "$VT_API_KEY" --force
-            
-            # now your Python script can call vt search by absolute path too
-            chmod +x scripts/retrieve_hashes.py
-            python3 scripts/retrieve_hashes.py
-          '''
-        }
-        archiveArtifacts artifacts: 'hashes.json'
+        sh '''
+          # No init needed—vt uses VT_API_KEY under the hood
+          chmod +x scripts/retrieve_hashes.py
+          python3 scripts/retrieve_hashes.py
+        '''
+      }
+      post {
+        always { archiveArtifacts artifacts: 'hashes.json', fingerprint: true }
       }
     }
 
