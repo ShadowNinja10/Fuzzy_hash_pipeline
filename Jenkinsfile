@@ -22,11 +22,11 @@ pipeline {
       }
     }
 
-    // stage('Setup Python Environment') {
-    //   steps {
-    //     sh 'pip install --upgrade ppdeep pymongo'
-    //   }
-    // }
+    stage('Setup Python Environment') {
+      steps {
+        sh 'source ~/venvs/datasci/bin/activate'
+      }
+    }
 
     // stage('1) Retrieve Hashes') {
     //   steps {
