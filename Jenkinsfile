@@ -19,11 +19,28 @@ pipeline {
       }
     }
 
+    // stage('1) Retrieve Hashes') {
+    //   steps {
+    //     sh 'chmod +x scripts/retrieve_hashes.py'
+    //     sh 'python3 scripts/retrieve_hashes.py'
+    //     archiveArtifacts artifacts: 'hashes.json', fingerprint: true
+    //   }
+    // }
+
     stage('1) Retrieve Hashes') {
       steps {
-        sh 'chmod +x scripts/retrieve_hashes.py'
-        sh 'python3 scripts/retrieve_hashes.py'
-        archiveArtifacts artifacts: 'hashes.json', fingerprint: true
+        // this injects your secret text into $VT_API_KEY
+        withCredentials([string(credentialsId: 'vt-api-key', variable: 'VT_API_KEY')]) {
+          sh '''
+            # initialize the vt CLI
+            vt init $VT_API_KEY
+            
+            # now your Python script can call `vt search ...`
+            chmod +x scripts/retrieve_hashes.py
+            python3 scripts/retrieve_hashes.py
+          '''
+        }
+        archiveArtifacts artifacts: 'hashes.json'
       }
     }
 
