@@ -14,37 +14,12 @@ pipeline {
     }
 
     stage('Setup Python Environment') {
-      // steps {
-      //   // sh 'source ~/venvs/datasci/bin/activate'
-      //   sh '''
-      //     source /Users/jayesh.chaudhari@cohesity.com/venvs/datasci/bin/activate
-      //     pip install --upgrade pip
-      //     pip install virustotal-cli ppdeep pymongo
-      //   '''
-      // }
-
       steps {
         sh '''
-          # install vt via brew if it's not already present
-          if ! command -v vt >/dev/null 2>&1; then
-            echo "Installing vt CLI via Homebrew…"
-            brew update
-            brew install virustotal-cli
-          fi
-
-          # make sure pip deps are there
           pip install --upgrade ppdeep pymongo
         '''
       }
     }
-
-    // stage('1) Retrieve Hashes') {
-    //   steps {
-    //     sh 'chmod +x scripts/retrieve_hashes.py'
-    //     sh 'python3 scripts/retrieve_hashes.py'
-    //     archiveArtifacts artifacts: 'hashes.json', fingerprint: true
-    //   }
-    // }
 
     stage('1) Retrieve Hashes') {
       steps {
